@@ -19,17 +19,18 @@ namespace IFN647_EduSearch_Information_System.UI
 
         private void SearchForm_Load(object sender, EventArgs e)
         {
-            string path = @"C:\temp\cran_information_needs.txt";
+            string path = @"C:\Users\Yasiru\Desktop\IFN647\Project\collection\crandocs";
+            Classes.PreProcessing p = new Classes.PreProcessing();
+            p.sourceDocument_PreProcessing(path);
+            //System.IO.TextReader reader = new System.IO.StreamReader(path);
+            //string text = reader.ReadToEnd();
+            //Console.WriteLine(text);
+            //reader.Close();
 
-            System.IO.TextReader reader = new System.IO.StreamReader(path);
-            string text = reader.ReadToEnd();
-            Console.WriteLine(text);
-            reader.Close();
-
-            //separating query
-            String[] substrings = text.Split(new char[] { '.', 'I', 'D' });
-            foreach (var substring in substrings)
-                Console.WriteLine(substring);
+            ////separating query
+            //String[] substrings = text.Split(new char[] { '.', 'I', 'D' });
+            //foreach (var substring in substrings)
+            //Console.WriteLine(substring);
         }
     }
 }
