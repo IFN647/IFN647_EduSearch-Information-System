@@ -8,5 +8,6 @@ namespace IFN647_EduSearch_Information_System.Classes
 {
     class Index
     {
+        string a = "";
     }
 }
