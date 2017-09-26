@@ -14,18 +14,7 @@ namespace IFN647_EduSearch_Information_System
         [STAThread]
         static void Main()
         {
-            string path = @"C:\temp\cran_information_needs.txt";
-
-            //// SOLUTION 1
-            //System.IO.TextReader reader = new System.IO.StreamReader(path);
-            //string text = reader.ReadToEnd();
-            //Console.WriteLine(text);
-            //reader.Close();
-
-            ////separating query
-            //String[] substrings = text.Split(new char[] { '.', 'I', 'D' });
-            //foreach (var substring in substrings)
-            //    Console.WriteLine(substring);
+       
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

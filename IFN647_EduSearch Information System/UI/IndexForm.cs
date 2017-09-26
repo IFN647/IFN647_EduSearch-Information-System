@@ -37,5 +37,13 @@ namespace IFN647_EduSearch_Information_System.UI
                 }
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string path= "dd";
+            Form fbd = new UI.SearchForm(path);
+            fbd.Show();
+            this.Hide();
+        }
     }
 }
