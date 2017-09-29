@@ -18,10 +18,6 @@ namespace IFN647_EduSearch_Information_System.UI
             InitializeComponent();
         }
 
-        private void IndexForm_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -40,9 +36,10 @@ namespace IFN647_EduSearch_Information_System.UI
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string path= "dd";
-            Form fbd = new UI.SearchForm(path);
-            fbd.Show();
+            string SourceDirectoryPath = "";
+            string InfoNeedFilepath = "";
+            Form SchFrom = new UI.SearchForm(SourceDirectoryPath, InfoNeedFilepath);
+            SchFrom.Show();
             this.Hide();
         }
     }

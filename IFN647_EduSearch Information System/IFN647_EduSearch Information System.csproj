@@ -52,8 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Index.cs" />
-    <Compile Include="Classes\PorterStemmer.cs" />
+    <Compile Include="Classes\InformationNeed.cs" />
     <Compile Include="Classes\PreProcessing.cs" />
+    <Compile Include="Classes\SourceDocument.cs" />
     <Compile Include="UI\IndexForm.cs">
       <SubType>Form</SubType>
     </Compile>

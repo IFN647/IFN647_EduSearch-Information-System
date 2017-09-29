@@ -4,44 +4,53 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PorterStemmerAlgorithm;
 using System.Text.RegularExpressions;
 
 namespace IFN647_EduSearch_Information_System.Classes
 {
     class PreProcessing
     {
-        private PorterStemmer myStemmer;
-
-        public PreProcessing()
-        {
-            myStemmer = new PorterStemmerAlgorithm.PorterStemmer();
-        }
-
 
         //Source Documents Pre-Processing
-        public List<string> sourceDocument_PreProcessing(string directoryPath)
+        public List<SourceDocument> sourceDocument_PreProcessing(string directoryPath)
         {
-            List<string> sourcefiles = new List<string>();
+            List<SourceDocument> sourceDocuments = new List<SourceDocument>();
             try
             {
-                sourcefiles = Directory.GetFiles(directoryPath).ToList<string>();
-                if (sourcefiles.Count > 0)
+                string[] sourcefiles = Directory.GetFiles(directoryPath, "*.txt");
+                if (sourcefiles.Length > 0)
                 {
                     foreach (string filePath in sourcefiles)
                     {
-                        string line = "";
+                        SourceDocument sourceDocument = new SourceDocument();
                         System.IO.StreamReader reader = new System.IO.StreamReader(filePath);
-                        while ((line = reader.ReadToEnd()) != null)
-                        {
-                            line = Regex.Replace(line, ".I(.|\n)*?.T(.|\n)*?.A", string.Empty);
-                            line = Regex.Replace(line, ".B", string.Empty);
-                            line = Regex.Replace(line, ".W", string.Empty);
-                            string[] tokens = TokeniseString(line);
-                            string[] stems = StemTokens(tokens);
-                        }
+                        string txtData = reader.ReadToEnd();
+                        txtData = Regex.Replace(txtData, @"\t|\n|\r", "");
+                        int End_Pos_I = txtData.IndexOf(".I") + ".I".Length;
+                        int Start_Pos_T = txtData.IndexOf(".T");
+                        sourceDocument.DocID = txtData.Substring(End_Pos_I, Start_Pos_T - End_Pos_I).Trim();
+
+                        int End_Pos_T = txtData.IndexOf(".T") + ".T".Length;
+                        int Start_Pos_A = txtData.IndexOf(".A");
+                        string temp = txtData.Substring(End_Pos_T, Start_Pos_A - End_Pos_T);
+                        sourceDocument.Title = temp.Replace(".", "").Trim();
+
+                        int End_Pos_A = txtData.IndexOf(".A") + ".A".Length;
+                        int Start_Pos_B = txtData.IndexOf(".B");
+                        sourceDocument.Author = txtData.Substring(End_Pos_A, Start_Pos_B - End_Pos_A).Trim();
+
+                        int End_Pos_B = txtData.IndexOf(".B") + ".B".Length;
+                        int Start_Pos_W = txtData.IndexOf(".W");
+                        sourceDocument.BibInfo = txtData.Substring(End_Pos_B, Start_Pos_W - End_Pos_B).Trim().TrimEnd('.');
+
+                        int End_Pos_W = txtData.IndexOf(".W") + ".W".Length;
+                        sourceDocument.Text = txtData.Substring(End_Pos_W + temp.Length).Trim();
+                        sourceDocuments.Add(sourceDocument);
                         reader.Close();
                     }
+                }else
+                {
+                    //No files found
                 }
             }
             catch (Exception)
@@ -49,31 +58,44 @@ namespace IFN647_EduSearch_Information_System.Classes
 
                 throw;
             }
-            return null;
+            return sourceDocuments;
         }
 
-        public string[] TokeniseString(string text)
+        //Infromation Needs Pre-Processing
+        public List<InformationNeed> informationNeeds_PreProcessing(string filePath)
         {
-            char[] splitters = new char[] { ' ', '\t', '\'', '"', '-', '(', ')', ',', '’','\n', ':', ';', '?', '.', '!','W'};
-            return text.ToLower().Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        public string[] StemTokens(string[] tokens)
-        {
-            int numTokens = tokens.Count();
-            string[] stems = new string[numTokens];
-            for (int i = 0; i < numTokens; i++)
+            List<InformationNeed> InformationNeeds = new List<InformationNeed>();
+            try
             {
-                stems[i] = myStemmer.stemTerm(tokens[i]);
+                if (Path.GetExtension(filePath)==".txt")
+                {
+                    System.IO.StreamReader reader = new System.IO.StreamReader(filePath);
+                    string txtData = reader.ReadToEnd();
+                    txtData = Regex.Replace(txtData, @"\t|\n|\r", "");
+
+                    String[] data = Regex.Split(txtData,".I");
+                    foreach (string item in data)
+                    {
+                        if (!string.IsNullOrEmpty(item))
+                        {
+                            InformationNeed InformationNeed = new InformationNeed();
+                            String[] substrings = Regex.Split(item, ".D");
+                            InformationNeed.TopicID = substrings[0].Trim();
+                            InformationNeed.Description = Regex.Replace(substrings[1],"\"","").TrimEnd('.').Trim();
+                            InformationNeeds.Add(InformationNeed);            
+                        }
+                    }
+                    reader.Close();
+                }else
+                {
+                    // Not a Valid text file
+                }
             }
-            return stems;
-        }
-
-
-
-        public List<string> informationNeeds_PreProcessing(string filePath)
-        {
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
+            return InformationNeeds;
         }
     }
 }
