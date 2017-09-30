@@ -14,11 +14,9 @@ namespace IFN647_EduSearch_Information_System
         [STAThread]
         static void Main()
         {
-       
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new UI.IndexForm());
+            Application.Run(new MainForm());
         }
     }
 }
